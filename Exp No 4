@@ -1,0 +1,43 @@
+# Import libraries
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+from google.colab import files
+
+# Upload image
+uploaded = files.upload()
+
+# Get uploaded file name
+image_path = list(uploaded.keys())[0]
+
+# Read image
+image = cv2.imread(image_path)
+
+# Convert BGR to RGB for display
+image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+# Create a 5x5 kernel
+kernel = np.ones((5,5), np.uint8)
+
+# Apply dilation
+dilated_image = cv2.dilate(image_rgb, kernel, iterations=1)
+
+# Display Original and Dilated Images
+plt.figure(figsize=(12,5))
+
+plt.subplot(1,2,1)
+plt.imshow(image_rgb)
+plt.title("Original Image")
+plt.axis("off")
+
+plt.subplot(1,2,2)
+plt.imshow(dilated_image)
+plt.title("Dilated Image")
+plt.axis("off")
+
+plt.show()
+
+# Save the dilated image
+cv2.imwrite("dilated_image.jpg", cv2.cvtColor(dilated_image, cv2.COLOR_RGB2BGR))
+
+print("Dilated image saved as 'dilated_image.jpg'")
