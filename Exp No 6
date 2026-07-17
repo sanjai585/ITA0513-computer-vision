@@ -1,0 +1,53 @@
+# Import required libraries
+import cv2
+from google.colab import files
+from google.colab.patches import cv2_imshow
+
+# Upload a video file
+uploaded = files.upload()
+
+# Get uploaded file name
+video_path = list(uploaded.keys())[0]
+
+# Open the video
+cap = cv2.VideoCapture(video_path)
+
+# Get video properties
+width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+fps = cap.get(cv2.CAP_PROP_FPS)
+
+# Create VideoWriter to save output
+fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+out = cv2.VideoWriter('output_video.mp4', fourcc, fps, (width, height), False)
+
+frame_count = 0
+
+while cap.isOpened():
+    ret, frame = cap.read()
+
+    if not ret:
+        break
+
+    # Convert frame to grayscale
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+    # Write grayscale frame to output video
+    out.write(gray)
+
+    # Display first 10 frames only
+    if frame_count < 10:
+        print("Original Frame")
+        cv2_imshow(frame)
+
+        print("Grayscale Frame")
+        cv2_imshow(gray)
+
+    frame_count += 1
+
+# Release resources
+cap.release()
+out.release()
+
+print("Video processing completed successfully.")
+print("Processed video saved as output_video.mp4")
