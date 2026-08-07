@@ -1,0 +1,71 @@
+# ==========================================
+# Homography Transformation on an Image
+# Google Colab
+# ==========================================
+
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+from google.colab import files
+
+# Upload image
+uploaded = files.upload()
+
+# Read uploaded image
+image_name = list(uploaded.keys())[0]
+img = cv2.imread(image_name)
+
+# Convert BGR to RGB
+img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+# Get image dimensions
+height, width = img.shape[:2]
+
+# Define four source points
+src_pts = np.float32([
+    [50, 50],
+    [width - 50, 50],
+    [50, height - 50],
+    [width - 50, height - 50]
+])
+
+# Define four destination points
+dst_pts = np.float32([
+    [0, 0],
+    [width - 100, 50],
+    [100, height - 50],
+    [width, height]
+])
+
+# Compute Homography Matrix
+H, status = cv2.findHomography(src_pts, dst_pts)
+
+print("Homography Matrix:")
+print(H)
+
+# Apply Homography Transformation
+warped = cv2.warpPerspective(img, H, (width, height))
+
+# Display Original and Transformed Images
+plt.figure(figsize=(14,6))
+
+plt.subplot(1,2,1)
+plt.imshow(img)
+plt.title("Original Image")
+plt.axis("off")
+
+plt.subplot(1,2,2)
+plt.imshow(warped)
+plt.title("Homography Transformed Image")
+plt.axis("off")
+
+plt.show()
+
+# Save output image
+output = cv2.cvtColor(warped, cv2.COLOR_RGB2BGR)
+cv2.imwrite("Homography_Transformed_Image.jpg", output)
+
+print("\nOutput saved as: Homography_Transformed_Image.jpg")
+
+# Download output image
+files.download("Homography_Transformed_Image.jpg")
