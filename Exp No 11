@@ -1,0 +1,70 @@
+# ==========================================
+# Affine Transformation on an Image
+# Google Colab
+# ==========================================
+
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+from google.colab import files
+
+# Upload image
+uploaded = files.upload()
+
+# Read uploaded image
+image_name = list(uploaded.keys())[0]
+img = cv2.imread(image_name)
+
+# Convert BGR to RGB
+img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+# Get image size
+rows, cols = img.shape[:2]
+
+# Define three source points
+pts1 = np.float32([
+    [50, 50],
+    [200, 50],
+    [50, 200]
+])
+
+# Define destination points
+pts2 = np.float32([
+    [10, 100],
+    [200, 50],
+    [100, 250]
+])
+
+# Compute Affine Transformation Matrix
+M = cv2.getAffineTransform(pts1, pts2)
+
+# Apply Affine Transformation
+transformed = cv2.warpAffine(img, M, (cols, rows))
+
+# Display images
+plt.figure(figsize=(12,6))
+
+plt.subplot(1,2,1)
+plt.imshow(img)
+plt.title("Original Image")
+plt.axis("off")
+
+plt.subplot(1,2,2)
+plt.imshow(transformed)
+plt.title("Affine Transformed Image")
+plt.axis("off")
+
+plt.show()
+
+# Print Transformation Matrix
+print("Affine Transformation Matrix:")
+print(M)
+
+# Save output image
+output = cv2.cvtColor(transformed, cv2.COLOR_RGB2BGR)
+cv2.imwrite("Affine_Transformed_Image.jpg", output)
+
+print("\nOutput saved as: Affine_Transformed_Image.jpg")
+
+# Download output image
+files.download("Affine_Transformed_Image.jpg")
