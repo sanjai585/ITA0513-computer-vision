@@ -1,0 +1,50 @@
+# ==========================================
+# Edge Detection using Canny Method
+# Google Colab
+# ==========================================
+
+import cv2
+import matplotlib.pyplot as plt
+from google.colab import files
+
+# Upload image
+uploaded = files.upload()
+
+# Read uploaded image
+image_name = list(uploaded.keys())[0]
+img = cv2.imread(image_name)
+
+# Convert to RGB for display
+img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+# Convert to Grayscale
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+# Apply Gaussian Blur to reduce noise
+blur = cv2.GaussianBlur(gray, (5, 5), 1.4)
+
+# Perform Canny Edge Detection
+edges = cv2.Canny(blur, threshold1=100, threshold2=200)
+
+# Display Images
+plt.figure(figsize=(12,6))
+
+plt.subplot(1,2,1)
+plt.imshow(img_rgb)
+plt.title("Original Image")
+plt.axis("off")
+
+plt.subplot(1,2,2)
+plt.imshow(edges, cmap="gray")
+plt.title("Canny Edge Detection")
+plt.axis("off")
+
+plt.show()
+
+# Save edge image
+cv2.imwrite("Canny_Edges.jpg", edges)
+
+print("Output saved as: Canny_Edges.jpg")
+
+# Download output image
+files.download("Canny_Edges.jpg")
