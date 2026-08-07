@@ -1,0 +1,54 @@
+# ==========================================
+# Edge Detection using Sobel Y
+# Google Colab
+# ==========================================
+
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+from google.colab import files
+
+# Upload image
+uploaded = files.upload()
+
+# Read uploaded image
+image_name = list(uploaded.keys())[0]
+img = cv2.imread(image_name)
+
+# Convert BGR to RGB
+img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+# Convert to Grayscale
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+# Apply Gaussian Blur (optional)
+gray = cv2.GaussianBlur(gray, (3, 3), 0)
+
+# Apply Sobel Operator along Y-axis
+sobel_y = cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=3)
+
+# Convert to uint8
+sobel_y = cv2.convertScaleAbs(sobel_y)
+
+# Display images
+plt.figure(figsize=(12,6))
+
+plt.subplot(1,2,1)
+plt.imshow(img_rgb)
+plt.title("Original Image")
+plt.axis("off")
+
+plt.subplot(1,2,2)
+plt.imshow(sobel_y, cmap='gray')
+plt.title("Sobel Edge Detection (Y-axis)")
+plt.axis("off")
+
+plt.show()
+
+# Save output image
+cv2.imwrite("Sobel_Y_Output.jpg", sobel_y)
+
+print("Output saved as: Sobel_Y_Output.jpg")
+
+# Download output image
+files.download("Sobel_Y_Output.jpg")
